@@ -261,6 +261,16 @@ func SetApiRouter(router *gin.Engine) {
 				middleware.TurnstileCheck(),
 				controller.CreateMarketplaceToken,
 			)
+			// Protected: purchase quota + create token (agent-initiated)
+			// Within monthly budget: auto-approve; over budget: pending + email confirmation
+			marketplaceRoute.POST("/purchase",
+				middleware.UserAuth(),
+				middleware.MarketplaceTokenRateLimit(),
+				middleware.TurnstileCheck(),
+				controller.PurchaseMarketplaceQuota,
+			)
+			// Public: email confirmation link for pending purchases (no auth, token-based)
+			marketplaceRoute.GET("/purchase/confirm", controller.ConfirmMarketplacePurchase)
 		}
 
 		usageRoute := apiRouter.Group("/usage")

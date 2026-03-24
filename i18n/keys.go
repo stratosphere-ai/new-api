@@ -282,9 +282,16 @@ const (
 
 // Marketplace related messages
 const (
-	MsgMarketplaceInvalidModelName = "marketplace.invalid_model_name"
-	MsgMarketplaceModelListTooLong = "marketplace.model_list_too_long"
-	MsgMarketplaceInvalidExpire    = "marketplace.invalid_expire"
+	MsgMarketplaceInvalidModelName    = "marketplace.invalid_model_name"
+	MsgMarketplaceModelListTooLong    = "marketplace.model_list_too_long"
+	MsgMarketplaceInvalidExpire       = "marketplace.invalid_expire"
+	MsgMarketplaceInvalidQuota        = "marketplace.invalid_quota"
+	MsgMarketplaceInsufficientBalance = "marketplace.insufficient_balance"
+	MsgMarketplacePurchaseFailed      = "marketplace.purchase_failed"
+	MsgMarketplacePurchaseNotFound    = "marketplace.purchase_not_found"
+	MsgMarketplacePurchaseNotPending  = "marketplace.purchase_not_pending"
+	MsgMarketplacePurchaseExpired     = "marketplace.purchase_expired"
+	MsgMarketplacePurchaseConfirmed   = "marketplace.purchase_confirmed"
 )
 
 // Model layer error messages (for translation in controller)

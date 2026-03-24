@@ -15,6 +15,7 @@ type UserSetting struct {
 	SidebarModules        string  `json:"sidebar_modules,omitempty"`                // SidebarModules 左侧边栏模块配置
 	BillingPreference     string  `json:"billing_preference,omitempty"`             // BillingPreference 扣费策略（订阅/钱包）
 	Language              string  `json:"language,omitempty"`                       // Language 用户语言偏好 (zh, en)
+	MarketplaceMonthlyBudget int  `json:"marketplace_monthly_budget,omitempty"`     // MarketplaceMonthlyBudget Marketplace 每月自动购买预算上限（quota 单位），0 表示不限
 }
 
 var (
