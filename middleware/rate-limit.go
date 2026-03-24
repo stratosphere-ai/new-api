@@ -200,3 +200,9 @@ func userRedisRateLimiter(c *gin.Context, maxRequestNum int, duration int64, key
 func SearchRateLimit() func(c *gin.Context) {
 	return userRateLimitFactory(common.SearchRateLimitNum, common.SearchRateLimitDuration, "SR")
 }
+
+// MarketplaceTokenRateLimit returns a per-user rate limiter for marketplace token creation.
+// 10 requests per 3600 seconds (1 hour) per user, keyed by user ID (anti-proxy-rotation).
+func MarketplaceTokenRateLimit() func(c *gin.Context) {
+	return userRateLimitFactory(10, 3600, "MKT")
+}

@@ -280,6 +280,13 @@ const (
 	MsgOAuthTrustLevelLow        = "oauth.trust_level_low"
 )
 
+// Marketplace related messages
+const (
+	MsgMarketplaceInvalidModelName = "marketplace.invalid_model_name"
+	MsgMarketplaceModelListTooLong = "marketplace.model_list_too_long"
+	MsgMarketplaceInvalidExpire    = "marketplace.invalid_expire"
+)
+
 // Model layer error messages (for translation in controller)
 const (
 	MsgRedeemFailed          = "redeem.failed"

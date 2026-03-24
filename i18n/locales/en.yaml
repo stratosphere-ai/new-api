@@ -249,3 +249,8 @@ custom_oauth.name_empty: "Provider name cannot be empty"
 custom_oauth.has_bindings: "Cannot delete provider with existing user bindings"
 custom_oauth.binding_not_found: "OAuth binding not found"
 custom_oauth.provider_id_field_invalid: "Could not extract user ID from provider response"
+
+# Marketplace messages
+marketplace.invalid_model_name: "Invalid model name, only alphanumeric characters, dashes, dots, slashes, colons and underscores are allowed"
+marketplace.model_list_too_long: "Model list is too long, maximum 50 models allowed"
+marketplace.invalid_expire: "Invalid expire format, supported: 1h, 1d, 7d, 30d, 90d, 365d"

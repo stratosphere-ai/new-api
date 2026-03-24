@@ -12,6 +12,9 @@ import (
 )
 
 func SetApiRouter(router *gin.Engine) {
+	// AI agent service discovery endpoint
+	router.GET("/.well-known/ai-marketplace.json", controller.GetMarketplaceServiceDesc)
+
 	apiRouter := router.Group("/api")
 	apiRouter.Use(gzip.Gzip(gzip.DefaultCompression))
 	apiRouter.Use(middleware.BodyStorageCleanup()) // 清理请求体存储
@@ -243,6 +246,21 @@ func SetApiRouter(router *gin.Engine) {
 			tokenRoute.PUT("/", controller.UpdateToken)
 			tokenRoute.DELETE("/:id", controller.DeleteToken)
 			tokenRoute.POST("/batch", controller.DeleteTokenBatch)
+		}
+
+		// Marketplace API — designed for both human UI and AI agent consumption
+		marketplaceRoute := apiRouter.Group("/marketplace")
+		{
+			// Public: model catalog (read-only, no auth needed)
+			marketplaceRoute.GET("/models", controller.GetMarketplaceCatalog)
+			// Protected: one-step token creation
+			// UserAuth + per-user rate limit (10/hour) + Turnstile (if enabled)
+			marketplaceRoute.POST("/tokens",
+				middleware.UserAuth(),
+				middleware.MarketplaceTokenRateLimit(),
+				middleware.TurnstileCheck(),
+				controller.CreateMarketplaceToken,
+			)
 		}
 
 		usageRoute := apiRouter.Group("/usage")
