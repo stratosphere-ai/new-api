@@ -18,6 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Notification,
   Button,
@@ -49,6 +50,8 @@ function TokensPage() {
     openFluentNotificationRef.current?.(key),
   );
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [initialModels, setInitialModels] = useState([]);
   const latestRef = useRef({
     tokens: [],
     selectedKeys: [],
@@ -324,6 +327,19 @@ function TokensPage() {
     return () => observer.disconnect();
   }, []);
 
+  // Auto-open create modal when navigated from Model Marketplace with ?model=xxx
+  useEffect(() => {
+    const modelParam = searchParams.get('model');
+    if (modelParam) {
+      setInitialModels([modelParam]);
+      tokensData.setEditingToken({ id: undefined });
+      tokensData.setShowEdit(true);
+      // Clean up URL param so it doesn't re-trigger
+      searchParams.delete('model');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, []);
+
   const {
     // Edit state
     showEdit,
@@ -360,7 +376,11 @@ function TokensPage() {
         refresh={refresh}
         editingToken={editingToken}
         visiable={showEdit}
-        handleClose={closeEdit}
+        handleClose={() => {
+          closeEdit();
+          setInitialModels([]);
+        }}
+        initialModels={initialModels}
       />
 
       <CardPro

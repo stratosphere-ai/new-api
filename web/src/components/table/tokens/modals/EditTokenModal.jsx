@@ -186,7 +186,12 @@ const EditTokenModal = (props) => {
       if (isEdit) {
         loadToken();
       } else {
-        formApiRef.current?.setValues(getInitValues());
+        const initVals = getInitValues();
+        if (props.initialModels && props.initialModels.length > 0) {
+          initVals.model_limits = props.initialModels;
+          initVals.model_limits_enabled = true;
+        }
+        formApiRef.current?.setValues(initVals);
       }
     } else {
       formApiRef.current?.reset();

@@ -19,7 +19,8 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import { SideSheet, Typography, Button } from '@douyinfe/semi-ui';
-import { IconClose } from '@douyinfe/semi-icons';
+import { IconClose, IconKey } from '@douyinfe/semi-icons';
+import { useNavigate } from 'react-router-dom';
 
 import { useIsMobile } from '../../../../hooks/common/useIsMobile';
 import ModelHeader from './components/ModelHeader';
@@ -45,6 +46,13 @@ const ModelDetailSideSheet = ({
   t,
 }) => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('user');
+
+  const handleCreateToken = () => {
+    onClose();
+    navigate(`/console/token?model=${encodeURIComponent(modelData.model_name)}`);
+  };
 
   return (
     <SideSheet
@@ -99,6 +107,20 @@ const ModelDetailSideSheet = ({
               autoGroups={autoGroups}
               t={t}
             />
+            {isLoggedIn && (
+              <div className='mt-4 px-2 pb-2'>
+                <Button
+                  theme='solid'
+                  type='primary'
+                  icon={<IconKey />}
+                  block
+                  className='!rounded-lg'
+                  onClick={handleCreateToken}
+                >
+                  {t('使用此模型创建令牌')}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>
