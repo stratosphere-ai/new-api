@@ -262,3 +262,6 @@ marketplace.purchase_not_found: "未找到购买记录"
 marketplace.purchase_not_pending: "该购买已不在待确认状态"
 marketplace.purchase_expired: "该购买确认已过期"
 marketplace.purchase_confirmed: "购买确认成功"
+
+# Agent key messages
+agent_key.not_found: "Agent 密钥未找到"

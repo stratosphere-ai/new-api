@@ -261,3 +261,6 @@ marketplace.purchase_not_found: "Purchase record not found"
 marketplace.purchase_not_pending: "This purchase is no longer pending confirmation"
 marketplace.purchase_expired: "This purchase confirmation has expired"
 marketplace.purchase_confirmed: "Purchase confirmed successfully"
+
+# Agent key messages
+agent_key.not_found: "Agent key not found"

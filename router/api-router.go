@@ -275,6 +275,26 @@ func SetApiRouter(router *gin.Engine) {
 			marketplaceRoute.GET("/purchase/confirm", controller.ConfirmMarketplacePurchase)
 		}
 
+		// Agent API — direct connection for AI agents
+		agentRoute := apiRouter.Group("/agent")
+		{
+			// Agent provision endpoint — agent authenticates via ak-xxx in Authorization header
+			// No session/UserAuth needed — agent key is self-contained
+			agentRoute.POST("/provision",
+				middleware.CriticalRateLimit(),
+				controller.AgentProvision,
+			)
+			// Agent key management — for users to create/manage their agent keys
+			agentKeyRoute := agentRoute.Group("/keys")
+			agentKeyRoute.Use(middleware.UserAuth())
+			{
+				agentKeyRoute.GET("/", controller.GetAgentKeys)
+				agentKeyRoute.POST("/", controller.CreateAgentKey)
+				agentKeyRoute.PUT("/:id", controller.UpdateAgentKey)
+				agentKeyRoute.DELETE("/:id", controller.DeleteAgentKey)
+			}
+		}
+
 		usageRoute := apiRouter.Group("/usage")
 		usageRoute.Use(middleware.CORS(), middleware.CriticalRateLimit())
 		{

@@ -294,6 +294,11 @@ const (
 	MsgMarketplacePurchaseConfirmed   = "marketplace.purchase_confirmed"
 )
 
+// Agent key related messages
+const (
+	MsgAgentKeyNotFound = "agent_key.not_found"
+)
+
 // Model layer error messages (for translation in controller)
 const (
 	MsgRedeemFailed          = "redeem.failed"

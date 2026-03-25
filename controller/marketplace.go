@@ -330,6 +330,7 @@ func GetMarketplaceServiceDesc(c *gin.Context) {
 			"catalog":        serverAddress + "/api/marketplace/models",
 			"create_token":   serverAddress + "/api/marketplace/tokens",
 			"purchase_quota": serverAddress + "/api/marketplace/purchase",
+			"agent_provision": serverAddress + "/api/agent/provision",
 		},
 		"authentication":  "bearer",
 		"pricing_unit":    "quota",

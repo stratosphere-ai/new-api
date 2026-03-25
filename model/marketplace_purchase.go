@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
 	"gorm.io/gorm"
 )
 
@@ -27,6 +26,7 @@ type MarketplacePurchase struct {
 	ConfirmToken     string         `json:"confirm_token" gorm:"type:char(32);uniqueIndex"` // For email confirmation link
 	TokenId          int            `json:"token_id"`                                      // Created token ID (set after completion)
 	TokenKey         string         `json:"token_key" gorm:"type:char(48)"`                // Created token key (set after completion)
+	AgentKeyId       int            `json:"agent_key_id" gorm:"index;default:0"`           // 0 = direct API, >0 = via agent key
 	SourceIP         string         `json:"source_ip" gorm:"type:varchar(45)"`             // Request source IP
 	CreatedAt        time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	CompletedAt      *time.Time     `json:"completed_at"`
