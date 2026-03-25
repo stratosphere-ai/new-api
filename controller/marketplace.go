@@ -335,10 +335,11 @@ func GetMarketplaceServiceDesc(c *gin.Context) {
 		"pricing_unit":    "quota",
 		"requires_signup": true,
 		"rate_limits": gin.H{
-			"catalog_per_minute":  60,
-			"purchase_per_hour":   10,
-			"requires_turnstile":  common.TurnstileCheckEnabled,
+			"catalog_per_minute": 60,
+			"purchase_per_hour":  10,
+			"requires_turnstile": common.TurnstileCheckEnabled,
 		},
+		"agent_skills": serverAddress + "/.well-known/ai-marketplace-skills.json",
 	})
 }
 

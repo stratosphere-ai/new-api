@@ -14,6 +14,8 @@ import (
 func SetApiRouter(router *gin.Engine) {
 	// AI agent service discovery endpoint
 	router.GET("/.well-known/ai-marketplace.json", controller.GetMarketplaceServiceDesc)
+	// AI agent skills/instructions endpoint — operation manual for autonomous purchasing
+	router.GET("/.well-known/ai-marketplace-skills.json", controller.GetMarketplaceAgentSkills)
 
 	apiRouter := router.Group("/api")
 	apiRouter.Use(gzip.Gzip(gzip.DefaultCompression))
