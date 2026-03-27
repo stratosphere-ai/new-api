@@ -33,6 +33,7 @@ import PasswordResetForm from './components/auth/PasswordResetForm';
 import PasswordResetConfirm from './components/auth/PasswordResetConfirm';
 import Channel from './pages/Channel';
 import Token from './pages/Token';
+import AgentKey from './pages/AgentKey';
 import Redemption from './pages/Redemption';
 import TopUp from './pages/TopUp';
 import Log from './pages/Log';
@@ -139,6 +140,14 @@ function App() {
           element={
             <PrivateRoute>
               <Token />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/console/agent-keys'
+          element={
+            <PrivateRoute>
+              <AgentKey />
             </PrivateRoute>
           }
         />
