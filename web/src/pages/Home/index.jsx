@@ -32,6 +32,7 @@ import { StatusContext } from '../../context/Status';
 import { useActualTheme } from '../../context/Theme';
 import { marked } from 'marked';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import {
   IconGithubLogo,
   IconPlay,
@@ -67,6 +68,7 @@ const { Text } = Typography;
 
 const Home = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [statusState] = useContext(StatusContext);
   const actualTheme = useActualTheme();
   const [homePageContentLoaded, setHomePageContentLoaded] = useState(false);
@@ -136,6 +138,17 @@ const Home = () => {
 
     checkNoticeAndShow();
   }, []);
+
+  // Listen for navigation messages from iframe (e.g. login button click)
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data && event.data.type === 'navigate') {
+        navigate(event.data.path);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [navigate]);
 
   useEffect(() => {
     displayHomePageContent().then();
@@ -339,7 +352,8 @@ const Home = () => {
           {homePageContent.startsWith('https://') ? (
             <iframe
               src={homePageContent}
-              className='w-full h-screen border-none'
+              className='w-full border-none'
+              style={{ height: '100vh' }}
             />
           ) : (
             <div
