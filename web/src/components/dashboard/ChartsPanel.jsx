@@ -46,7 +46,8 @@ const ChartsPanel = ({
             {t('模型数据分析')}
           </div>
           <Tabs
-            type='slash'
+            type='button'
+            size='small'
             activeKey={activeChartTab}
             onChange={setActiveChartTab}
           >
@@ -57,9 +58,9 @@ const ChartsPanel = ({
           </Tabs>
         </div>
       }
-      bodyStyle={{ padding: 0 }}
+      bodyStyle={{ padding: '16px' }}
     >
-      <div className='h-96 p-2'>
+      <div className='h-96'>
         {activeChartTab === '1' && (
           <VChart spec={spec_line} option={CHART_CONFIG} />
         )}

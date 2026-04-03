@@ -29,29 +29,35 @@ const DashboardHeader = ({
   loading,
   t,
 }) => {
-  const ICON_BUTTON_CLASS = 'text-white hover:bg-opacity-80 !rounded-full';
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   return (
-    <div className='flex items-center justify-between mb-4'>
-      <h2
-        className='text-2xl font-semibold text-gray-800 transition-opacity duration-1000 ease-in-out'
-        style={{ opacity: greetingVisible ? 1 : 0 }}
-      >
-        {getGreeting}
-      </h2>
-      <div className='flex gap-3'>
+    <div className='flex items-center justify-between mb-5'>
+      <div>
+        <h2
+          className='text-2xl font-semibold text-semi-color-text-0 transition-opacity duration-1000 ease-in-out'
+          style={{ opacity: greetingVisible ? 1 : 0 }}
+        >
+          {getGreeting}
+        </h2>
+        <p className='text-sm text-semi-color-text-2 mt-1'>{dateStr}</p>
+      </div>
+      <div className='flex gap-2'>
         <Button
           type='tertiary'
+          theme='light'
           icon={<Search size={16} />}
           onClick={showSearchModal}
-          className={`bg-green-500 hover:bg-green-600 ${ICON_BUTTON_CLASS}`}
+          className='!rounded-lg'
         />
         <Button
           type='tertiary'
+          theme='light'
           icon={<RefreshCw size={16} />}
           onClick={refresh}
           loading={loading}
-          className={`bg-blue-500 hover:bg-blue-600 ${ICON_BUTTON_CLASS}`}
+          className='!rounded-lg'
         />
       </div>
     </div>

@@ -184,11 +184,12 @@ const PageLayout = () => {
           }}
         >
           <Content
+            className='bg-semi-color-bg-1'
             style={{
               flex: '1 0 auto',
               overflowY: isMobile ? 'visible' : 'hidden',
               WebkitOverflowScrolling: 'touch',
-              padding: shouldInnerPadding ? (isMobile ? '5px' : '24px') : '0',
+              padding: shouldInnerPadding ? (isMobile ? '12px 12px' : '20px 24px') : '0',
               position: 'relative',
             }}
           >

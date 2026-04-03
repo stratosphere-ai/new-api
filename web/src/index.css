@@ -119,13 +119,14 @@ code {
   flex-direction: column;
   min-height: 0;
   transition: width 0.3s ease;
-  background: var(--semi-color-bg-0);
+  background: var(--semi-color-bg-1);
+  border-right: 1px solid rgba(var(--semi-grey-2), 0.15);
 }
 
 .sidebar-nav {
   flex: 1;
   width: 100%;
-  background: var(--semi-color-bg-0);
+  background: var(--semi-color-bg-1);
   height: 100%;
   overflow-x: hidden;
   border-right: none;
@@ -142,21 +143,23 @@ code {
 
 /* 侧边栏导航项样式 */
 .sidebar-nav-item {
-  border-radius: 6px;
-  margin: 3px 8px;
+  border-radius: 8px;
+  margin: 2px 8px;
   transition: all 0.15s ease;
   padding: 8px 12px;
+  border-left: 2px solid transparent;
 }
 
 .sidebar-nav-item:hover {
-  background-color: rgba(var(--semi-blue-0), 0.08);
+  background-color: var(--semi-color-fill-0);
   color: var(--semi-color-primary);
 }
 
 .sidebar-nav-item-selected {
-  background-color: rgba(var(--semi-blue-0), 0.12);
+  background-color: var(--semi-color-primary-light-default);
   color: var(--semi-color-primary);
   font-weight: 500;
+  border-left: 2px solid var(--semi-color-primary);
 }
 
 /* 图标容器样式 */
@@ -168,6 +171,11 @@ code {
   justify-content: center;
   margin-right: 10px;
   transition: all 0.2s ease;
+  color: var(--semi-color-text-2);
+}
+
+.sidebar-nav-item-selected .sidebar-icon-container {
+  color: var(--semi-color-primary);
 }
 
 .sidebar-sub-icon-container {
@@ -183,18 +191,19 @@ code {
 
 /* 分割线样式 */
 .sidebar-divider {
-  margin: 4px 8px;
-  opacity: 0.15;
+  margin: 8px 16px;
+  opacity: 0.08;
 }
 
 /* 分组标签样式 */
 .sidebar-group-label {
-  padding: 4px 15px 8px;
-  color: var(--semi-color-text-2);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.8;
+  padding: 4px 15px 4px;
+  margin-top: 8px;
+  margin-bottom: 2px;
+  color: var(--semi-color-text-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 /* 底部折叠按钮 */
@@ -205,13 +214,11 @@ code {
   padding: 12px;
   margin-top: auto;
   cursor: pointer;
-  background-color: var(--semi-color-bg-0);
+  background-color: var(--semi-color-bg-1);
   position: sticky;
   bottom: 0;
   z-index: 10;
-  box-shadow: 0 -10px 10px -5px var(--semi-color-bg-0);
-  backdrop-filter: blur(4px);
-  border-top: 1px solid rgba(var(--semi-grey-0), 0.08);
+  border-top: 1px solid rgba(var(--semi-grey-2), 0.15);
 }
 
 .sidebar-collapse-button-inner {
@@ -238,7 +245,7 @@ code {
 @media (max-width: 767px) {
   .sidebar-container {
     background: var(--semi-color-bg-1);
-    border-right: 1px solid var(--semi-color-border);
+    border-right: 1px solid rgba(var(--semi-grey-2), 0.15);
   }
 
   .sidebar-nav {
@@ -247,7 +254,7 @@ code {
 
   .sidebar-collapse-button {
     background-color: var(--semi-color-bg-1);
-    box-shadow: 0 -10px 10px -5px var(--semi-color-bg-1);
+    border-top: 1px solid rgba(var(--semi-grey-2), 0.15);
   }
 }
 
@@ -785,6 +792,7 @@ html.dark .with-pastel-balls::before {
   height: calc(100vh - 60px);
   background-color: var(--semi-color-bg-0);
   overflow: auto;
+  border-right: 1px solid rgba(var(--semi-grey-2), 0.15);
 }
 
 .pricing-content {
@@ -828,7 +836,7 @@ html.dark .with-pastel-balls::before {
 /* ==================== semi-ui 组件自定义样式 ==================== */
 .semi-card-header,
 .semi-card-body {
-  padding: 10px !important;
+  padding: 16px !important;
 }
 
 /* ==================== 使用日志: channel affinity tag ==================== */
@@ -873,5 +881,22 @@ html.dark .with-pastel-balls::before {
 .semi-select,
 .semi-button,
 .semi-datepicker-range-input {
-  border-radius: 10px !important;
+  border-radius: 12px !important;
+}
+
+/* ==================== UI Redesign utility classes ==================== */
+.page-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--semi-color-text-1);
+  margin-bottom: 12px;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--semi-color-text-2);
 }

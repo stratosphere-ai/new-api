@@ -21,9 +21,9 @@ For commercial licensing, please contact support@quantumnous.com
 export const CHART_CONFIG = { mode: 'desktop-browser' };
 
 export const CARD_PROPS = {
-  shadows: '',
-  bordered: true,
-  headerLine: true,
+  shadows: 'hover',
+  bordered: false,
+  headerLine: false,
 };
 
 export const FORM_FIELD_PROPS = {

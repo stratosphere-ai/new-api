@@ -27,47 +27,46 @@ const LanguageSelector = ({ currentLang, onLanguageChange, t }) => {
     <Dropdown
       position='bottomRight'
       render={
-        <Dropdown.Menu className='!bg-semi-color-bg-overlay !border-semi-color-border !shadow-lg !rounded-lg dark:!bg-gray-700 dark:!border-gray-600'>
+        <Dropdown.Menu className='!bg-semi-color-bg-overlay !border-semi-color-border !shadow-lg !rounded-lg'>
           {/* Language sorting: Order by English name (Chinese, English, French, Japanese, Russian) */}
           <Dropdown.Item
             onClick={() => onLanguageChange('zh')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'zh' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'zh' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
             <CN title='中文' className='!w-5 !h-auto' />
             <span>中文</span>
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => onLanguageChange('en')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'en' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'en' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
             <GB title='English' className='!w-5 !h-auto' />
             <span>English</span>
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => onLanguageChange('fr')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'fr' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'fr' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
             <FR title='Français' className='!w-5 !h-auto' />
             <span>Français</span>
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => onLanguageChange('ja')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'ja' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'ja' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
-            {/* Japanese flag using emoji as country-flag-icons/react/3x2 does not export JP */}
             <JP title='日本語' className='!w-5 !h-auto' />
             <span>日本語</span>
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => onLanguageChange('ru')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'ru' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'ru' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
             <RU title='Русский' className='!w-5 !h-auto' />
             <span>Русский</span>
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => onLanguageChange('vi')}
-            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 dark:!text-gray-200 ${currentLang === 'vi' ? '!bg-semi-color-primary-light-default dark:!bg-blue-600 !font-semibold' : 'hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-600'}`}
+            className={`!flex !items-center !gap-2 !px-3 !py-1.5 !text-sm !text-semi-color-text-0 ${currentLang === 'vi' ? '!bg-semi-color-primary-light-default !font-semibold' : 'hover:!bg-semi-color-fill-1'}`}
           >
             <VN title='Tiếng Việt' className='!w-5 !h-auto' />
             <span>Tiếng Việt</span>
@@ -80,7 +79,7 @@ const LanguageSelector = ({ currentLang, onLanguageChange, t }) => {
         aria-label={t('common.changeLanguage')}
         theme='borderless'
         type='tertiary'
-        className='!p-1.5 !text-current focus:!bg-semi-color-fill-1 dark:focus:!bg-gray-700 !rounded-full !bg-semi-color-fill-0 dark:!bg-semi-color-fill-1 hover:!bg-semi-color-fill-1 dark:hover:!bg-semi-color-fill-2'
+        className='!p-1.5 !text-current focus:!bg-semi-color-fill-1 !rounded-lg !bg-semi-color-fill-0 hover:!bg-semi-color-fill-1 !w-8 !h-8'
       />
     </Dropdown>
   );

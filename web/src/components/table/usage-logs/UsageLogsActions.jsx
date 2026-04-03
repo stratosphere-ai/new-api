@@ -47,10 +47,9 @@ const LogsActions = ({
       <Skeleton loading={needSkeleton} active placeholder={placeholder}>
         <Space>
           <Tag
-            color='blue'
+            color='light'
             style={{
               fontWeight: 500,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               padding: 13,
             }}
             className='!rounded-lg'
@@ -58,10 +57,9 @@ const LogsActions = ({
             {t('消耗额度')}: {renderQuota(stat.quota)}
           </Tag>
           <Tag
-            color='pink'
+            color='light'
             style={{
               fontWeight: 500,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               padding: 13,
             }}
             className='!rounded-lg'
@@ -69,10 +67,8 @@ const LogsActions = ({
             RPM: {stat.rpm}
           </Tag>
           <Tag
-            color='white'
+            color='light'
             style={{
-              border: 'none',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               fontWeight: 500,
               padding: 13,
             }}

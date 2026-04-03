@@ -53,7 +53,7 @@ const UserInfoHeader = ({ t, userState }) => {
 
   return (
     <Card
-      className='!rounded-2xl overflow-hidden'
+      className='!rounded-2xl overflow-hidden shadow-md'
       cover={
         <div
           className='relative h-32'

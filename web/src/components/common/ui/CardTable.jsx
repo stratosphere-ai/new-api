@@ -139,7 +139,7 @@ const CardTable = ({
       (!tableProps.rowExpandable || tableProps.rowExpandable(record));
 
     return (
-      <Card key={rowKeyVal} className='!rounded-2xl shadow-sm'>
+      <Card key={rowKeyVal} className='!rounded-xl shadow-sm' style={{ border: '1px solid rgba(var(--semi-grey-2), 0.15)' }}>
         {columns.map((col, colIdx) => {
           if (
             tableProps?.visibleColumns &&
@@ -167,7 +167,7 @@ const CardTable = ({
               className='flex justify-between items-start py-1 border-b last:border-b-0 border-dashed'
               style={{ borderColor: 'var(--semi-color-border)' }}
             >
-              <span className='font-medium text-gray-600 mr-2 whitespace-nowrap select-none'>
+              <span className='font-medium text-semi-color-text-2 mr-2 whitespace-nowrap select-none'>
                 {title}
               </span>
               <div className='flex-1 break-all flex justify-end items-center gap-1'>

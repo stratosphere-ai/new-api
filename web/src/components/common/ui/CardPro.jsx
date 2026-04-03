@@ -21,7 +21,7 @@ import React, { useState } from 'react';
 import { Card, Divider, Typography, Button } from '@douyinfe/semi-ui';
 import PropTypes from 'prop-types';
 import { useIsMobile } from '../../../hooks/common/useIsMobile';
-import { IconEyeOpened, IconEyeClosed } from '@douyinfe/semi-icons';
+import { IconChevronDown, IconChevronUp } from '@douyinfe/semi-icons';
 
 const { Text } = Typography;
 
@@ -96,20 +96,20 @@ const CardPro = ({
 
         {/* 移动端操作切换按钮 */}
         {isMobile && hasMobileHideableContent && (
-          <>
-            <div className='w-full mb-2'>
-              <Button
-                onClick={toggleMobileActions}
-                icon={showMobileActions ? <IconEyeClosed /> : <IconEyeOpened />}
-                type='tertiary'
-                size='small'
-                theme='outline'
-                block
-              >
-                {showMobileActions ? t('隐藏操作项') : t('显示操作项')}
-              </Button>
-            </div>
-          </>
+          <div className='w-full mb-2'>
+            <Button
+              onClick={toggleMobileActions}
+              icon={showMobileActions ? <IconChevronUp /> : <IconChevronDown />}
+              iconPosition='right'
+              type='tertiary'
+              size='small'
+              theme='light'
+              block
+              className='!rounded-lg'
+            >
+              {showMobileActions ? t('收起筛选') : t('筛选与操作')}
+            </Button>
+          </div>
         )}
 
         {/* 操作按钮和搜索表单的容器 */}
@@ -148,7 +148,7 @@ const CardPro = ({
 
     return (
       <div
-        className={`flex w-full pt-4 border-t ${isMobile ? 'justify-center' : 'justify-between items-center'}`}
+        className={`flex w-full pt-4 border-t bg-semi-color-bg-0 ${isMobile ? 'justify-center' : 'justify-between items-center'}`}
         style={{ borderColor: 'var(--semi-color-border)' }}
       >
         {paginationArea}
@@ -160,12 +160,12 @@ const CardPro = ({
 
   return (
     <Card
-      className={`table-scroll-card !rounded-2xl ${className}`}
+      className={`table-scroll-card !rounded-2xl shadow-sm ${className}`}
       title={headerContent}
       footer={footerContent}
       shadows={shadows}
       bordered={bordered}
-      style={style}
+      style={{ border: '1px solid rgba(var(--semi-grey-2), 0.15)', ...style }}
       {...props}
     >
       {children}

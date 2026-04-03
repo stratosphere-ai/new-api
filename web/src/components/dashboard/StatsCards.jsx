@@ -39,10 +39,11 @@ const StatsCards = ({
           <Card
             key={idx}
             {...CARD_PROPS}
-            className={`${group.color} border-0 !rounded-2xl w-full`}
+            className='bg-semi-color-bg-0 !rounded-2xl w-full border-l-4 shadow-sm'
+            style={{ borderLeftColor: group.accentColor || 'var(--semi-color-primary)' }}
             title={group.title}
           >
-            <div className='space-y-4'>
+            <div className='space-y-5'>
               {group.items.map((item, itemIdx) => (
                 <div
                   key={itemIdx}
@@ -58,8 +59,8 @@ const StatsCards = ({
                       {item.icon}
                     </Avatar>
                     <div>
-                      <div className='text-xs text-gray-500'>{item.title}</div>
-                      <div className='text-lg font-semibold'>
+                      <div className='text-xs text-semi-color-text-2'>{item.title}</div>
+                      <div className='text-xl font-bold tabular-nums'>
                         <Skeleton
                           loading={loading}
                           active
@@ -82,9 +83,10 @@ const StatsCards = ({
                   </div>
                   {item.title === t('当前余额') ? (
                     <Tag
-                      color='white'
+                      color='light'
                       shape='circle'
                       size='large'
+                      className='cursor-pointer'
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate('/console/topup');
