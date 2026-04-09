@@ -192,6 +192,13 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 			break
 		}
 
+		// Circuit breaker: skip channels in OPEN state (fast-fail)
+		if !service.IsChannelAvailable(channel.Id) {
+			logger.LogInfo(c, fmt.Sprintf("circuit breaker: skipping channel #%d (circuit open), retrying next", channel.Id))
+			addUsedChannel(c, channel.Id)
+			continue
+		}
+
 		addUsedChannel(c, channel.Id)
 		requestBody, bodyErr := common.GetRequestBody(c)
 		if bodyErr != nil {
@@ -217,11 +224,13 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 
 		if newAPIError == nil {
+			service.RecordChannelSuccess(channel.Id)
 			return
 		}
 
 		newAPIError = service.NormalizeViolationFeeError(newAPIError)
 
+		service.RecordChannelFailure(channel.Id)
 		processChannelError(c, *types.NewChannelError(channel.Id, channel.Type, channel.Name, channel.ChannelInfo.IsMultiKey, common.GetContextKeyString(c, constant.ContextKeyChannelKey), channel.GetAutoBan()), newAPIError)
 
 		if !shouldRetry(c, newAPIError, common.RetryTimes-retryParam.GetRetry()) {
