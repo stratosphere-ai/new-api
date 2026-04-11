@@ -421,6 +421,7 @@ func postConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, usage 
 		}
 		model.UpdateUserUsedQuotaAndRequestCount(relayInfo.UserId, quota)
 		model.UpdateChannelUsedQuota(relayInfo.ChannelId, quota)
+		service.RecordMarketplaceEarning(relayInfo.ChannelId, quota)
 	}
 
 	if err := service.SettleBilling(ctx, relayInfo, quota); err != nil {
