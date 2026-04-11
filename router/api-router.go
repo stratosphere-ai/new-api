@@ -273,6 +273,24 @@ func SetApiRouter(router *gin.Engine) {
 			)
 			// Public: email confirmation link for pending purchases (no auth, token-based)
 			marketplaceRoute.GET("/purchase/confirm", controller.ConfirmMarketplacePurchase)
+
+			// Channel marketplace: users submit their own API keys for others to use
+			channelMarketRoute := marketplaceRoute.Group("/channels")
+			channelMarketRoute.Use(middleware.UserAuth())
+			{
+				channelMarketRoute.POST("/", controller.SubmitChannelToMarketplace)
+				channelMarketRoute.GET("/", controller.GetMyListings)
+				channelMarketRoute.PUT("/:id/status", controller.PauseOrResumeListing)
+				channelMarketRoute.DELETE("/:id", controller.DeleteListing)
+			}
+
+			// Earnings: view and settle revenue from channel listings
+			earningsRoute := marketplaceRoute.Group("/earnings")
+			earningsRoute.Use(middleware.UserAuth())
+			{
+				earningsRoute.GET("/", controller.GetMyEarnings)
+				earningsRoute.POST("/settle", controller.SettleEarnings)
+			}
 		}
 
 		// Agent API — direct connection for AI agents
