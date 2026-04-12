@@ -40,11 +40,22 @@ func SetMarketplaceRouter(router *gin.Engine) {
 		admin := mp.Group("/admin")
 		admin.Use(middleware.AdminAuth())
 		{
+			// Platform overview
+			admin.GET("/stats", mpController.AdminGetPlatformStats)
+
+			// Seller management
 			admin.GET("/sellers", mpController.AdminGetSellers)
+			admin.GET("/sellers/:id", mpController.AdminGetSellerDetail)
+			admin.POST("/sellers/:id/suspend", mpController.AdminSuspendSeller)
+			admin.POST("/sellers/:id/enable", mpController.AdminEnableSeller)
+
+			// Withdrawal management
 			admin.GET("/withdrawals", mpController.AdminGetWithdrawals)
 			admin.POST("/withdrawals/:id/approve", mpController.AdminApproveWithdrawal)
 			admin.POST("/withdrawals/:id/paid", mpController.AdminMarkWithdrawalPaid)
 			admin.POST("/withdrawals/:id/reject", mpController.AdminRejectWithdrawal)
+
+			// Settlement
 			admin.POST("/settlement/trigger", mpController.AdminTriggerSettlement)
 		}
 	}

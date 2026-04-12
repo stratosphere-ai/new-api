@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path ? 'active' : '';
+  const isActive = (path: string) => location.pathname.startsWith(path) ? 'active' : '';
 
   return (
     <nav className="nav">
@@ -12,6 +12,8 @@ export default function Navbar() {
         <Link to="/dashboard" className={isActive('/dashboard')}>Dashboard</Link>
         <Link to="/usage" className={isActive('/usage')}>Usage</Link>
         <Link to="/api" className={isActive('/api')}>API</Link>
+        <span style={{ color: 'var(--border)' }}>|</span>
+        <Link to="/admin" className={isActive('/admin')}>Admin</Link>
       </div>
     </nav>
   );

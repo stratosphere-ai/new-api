@@ -83,3 +83,8 @@ func GetAllSellers() ([]*Seller, error) {
 	err := mainModel.DB.Order("created_at desc").Find(&sellers).Error
 	return sellers, err
 }
+
+// UpdateSellerStatus updates seller status (active/suspended)
+func UpdateSellerStatus(id int, status int) error {
+	return mainModel.DB.Model(&Seller{}).Where("id = ?", id).Update("status", status).Error
+}

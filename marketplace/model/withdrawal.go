@@ -45,3 +45,24 @@ func GetPendingWithdrawals() ([]*Withdrawal, error) {
 	err := mainModel.DB.Where("status = ?", WithdrawalStatusPending).Order("created_at asc").Find(&withdrawals).Error
 	return withdrawals, err
 }
+
+// GetAllWithdrawals returns all withdrawals optionally filtered by status
+func GetAllWithdrawals(status int) ([]*Withdrawal, error) {
+	var withdrawals []*Withdrawal
+	q := mainModel.DB.Order("created_at desc")
+	if status > 0 {
+		q = q.Where("status = ?", status)
+	}
+	err := q.Find(&withdrawals).Error
+	return withdrawals, err
+}
+
+// GetWithdrawalById returns a single withdrawal
+func GetWithdrawalById(id int) (*Withdrawal, error) {
+	var w Withdrawal
+	err := mainModel.DB.First(&w, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &w, nil
+}

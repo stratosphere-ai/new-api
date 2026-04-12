@@ -85,6 +85,28 @@ type BuyerModelUsage struct {
 	AvgDiscount int    `json:"avg_discount"`
 }
 
+// PlatformStats holds platform-wide statistics
+type PlatformStats struct {
+	TotalTrades        int64 `json:"total_trades"`
+	TotalTokens        int64 `json:"total_tokens"`
+	TotalRetailAmount  int64 `json:"total_retail_amount"`
+	TotalBuyerAmount   int64 `json:"total_buyer_amount"`
+	TotalSellerAmount  int64 `json:"total_seller_amount"`
+	TotalPlatformAmount int64 `json:"total_platform_amount"`
+}
+
+// GetPlatformStats returns platform-wide aggregated statistics
+func GetPlatformStats() (*PlatformStats, error) {
+	var stats PlatformStats
+	err := mainModel.DB.Model(&Trade{}).
+		Select("COUNT(*) as total_trades, COALESCE(SUM(total_tokens), 0) as total_tokens, COALESCE(SUM(retail_amount), 0) as total_retail_amount, COALESCE(SUM(buyer_amount), 0) as total_buyer_amount, COALESCE(SUM(seller_amount), 0) as total_seller_amount, COALESCE(SUM(platform_amount), 0) as total_platform_amount").
+		Scan(&stats).Error
+	if err != nil {
+		return nil, err
+	}
+	return &stats, nil
+}
+
 // GetBuyerModelUsage returns per-model usage breakdown
 func GetBuyerModelUsage(buyerUserId int) ([]*BuyerModelUsage, error) {
 	var usage []*BuyerModelUsage
