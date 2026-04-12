@@ -125,15 +125,26 @@ func AdminSuspendSeller(c *gin.Context) {
 		return
 	}
 
-	// Disable all listings
-	listings, _ := mpModel.GetListingsBySellerId(sellerId)
+	// Disable all active listings
+	listings, err := mpModel.GetListingsBySellerId(sellerId)
+	if err != nil {
+		common.ApiError(c, fmt.Errorf("seller suspended but failed to fetch listings: %w", err))
+		return
+	}
+	var failedListings []int
 	for _, listing := range listings {
 		if listing.Status == mpModel.ListingStatusActive {
-			_ = mpModel.UpdateListingStatus(listing.Id, mpModel.ListingStatusPaused)
+			if err := mpModel.UpdateListingStatus(listing.Id, mpModel.ListingStatusPaused); err != nil {
+				failedListings = append(failedListings, listing.Id)
+				continue
+			}
 			model.UpdateChannelStatus(listing.ChannelId, "", common.ChannelStatusManuallyDisabled, "seller suspended by admin")
 		}
 	}
-
+	if len(failedListings) > 0 {
+		common.ApiError(c, fmt.Errorf("seller suspended but failed to disable listings: %v", failedListings))
+		return
+	}
 	common.ApiSuccess(c, nil)
 }
 

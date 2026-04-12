@@ -51,9 +51,10 @@ function formatDateTime(s: string): string {
 }
 
 // Extended API client for seller-specific endpoints
-async function request<T>(url: string): Promise<{ success: boolean; message: string; data: T }> {
+async function request<T>(url: string, options?: RequestInit): Promise<{ success: boolean; message: string; data: T }> {
   const token = localStorage.getItem('token') || '';
   const res = await fetch('/api/marketplace' + url, {
+    ...options,
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -68,24 +69,32 @@ export default function SellerWithdrawals() {
   const [balance, setBalance] = useState(0);
   const [totalEarned, setTotalEarned] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [withdrawing, setWithdrawing] = useState(false);
   const [tab, setTab] = useState<'withdrawals' | 'trades'>('withdrawals');
 
-  useEffect(() => {
-    async function load() {
-      const [wRes, tRes] = await Promise.all([
-        request<{ withdrawals: Withdrawal[]; balance: number; total_earned: number }>('/seller/withdrawals'),
-        request<Trade[]>('/seller/trades'),
-      ]);
-      if (wRes.success) {
-        setWithdrawals(wRes.data.withdrawals || []);
-        setBalance(wRes.data.balance);
-        setTotalEarned(wRes.data.total_earned);
-      }
-      if (tRes.success) setTrades(tRes.data || []);
-      setLoading(false);
+  async function load() {
+    const [wRes, tRes] = await Promise.all([
+      request<{ withdrawals: Withdrawal[]; balance: number; total_earned: number }>('/seller/withdrawals'),
+      request<Trade[]>('/seller/trades'),
+    ]);
+    if (wRes.success) {
+      setWithdrawals(wRes.data.withdrawals || []);
+      setBalance(wRes.data.balance);
+      setTotalEarned(wRes.data.total_earned);
     }
-    load();
-  }, []);
+    if (tRes.success) setTrades(tRes.data || []);
+    setLoading(false);
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function handleRequestWithdrawal() {
+    if (!confirm('Request withdrawal of your entire available balance?')) return;
+    setWithdrawing(true);
+    await request('/seller/withdrawal/request', { method: 'POST' });
+    await load();
+    setWithdrawing(false);
+  }
 
   if (loading) {
     return (
@@ -107,7 +116,20 @@ export default function SellerWithdrawals() {
 
   return (
     <div className="container">
-      <h2 style={{ marginBottom: 24 }}>Earnings & Withdrawals</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h2>Earnings & Withdrawals</h2>
+        {balance > 0 && (
+          <button
+            className="submit-btn"
+            style={{ width: 'auto', padding: '10px 24px', marginTop: 0 }}
+            onClick={handleRequestWithdrawal}
+            disabled={withdrawing}
+          >
+            {withdrawing && <span className="loading" />}
+            {withdrawing ? 'Requesting...' : `Withdraw ${formatQuota(balance)}`}
+          </button>
+        )}
+      </div>
 
       {/* Stats */}
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>

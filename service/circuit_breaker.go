@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/QuantumNous/new-api/common"
+	mpService "github.com/QuantumNous/new-api/marketplace/service"
 	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/setting/operation_setting"
 )
@@ -217,6 +218,9 @@ func RegisterChannelCacheHooks() {
 			return true
 		}
 		if IsChannelRateLimited(channelId, rpmLimit, tpmLimit) {
+			return true
+		}
+		if mpService.IsListingCapExceeded(channelId) {
 			return true
 		}
 		return false

@@ -19,13 +19,14 @@ func SetMarketplaceRouter(router *gin.Engine) {
 		authed.Use(middleware.UserAuth())
 		{
 			// Seller routes
-			authed.POST("/seller/register", mpController.RegisterSeller)
+			authed.POST("/seller/register", middleware.CriticalRateLimit(), mpController.RegisterSeller)
 			authed.GET("/seller/dashboard", mpController.GetSellerDashboard)
 			authed.GET("/seller/withdrawals", mpController.GetSellerWithdrawals)
 			authed.GET("/seller/trades", mpController.GetSellerTrades)
+			authed.POST("/seller/withdrawal/request", middleware.CriticalRateLimit(), mpController.RequestWithdrawal)
 
 			// Listing management
-			authed.POST("/listings", mpController.CreateListing)
+			authed.POST("/listings", middleware.CriticalRateLimit(), mpController.CreateListing)
 			authed.POST("/listings/:id/pause", mpController.PauseListing)
 			authed.POST("/listings/:id/resume", mpController.ResumeListing)
 			authed.DELETE("/listings/:id", mpController.DeleteListing)
@@ -35,7 +36,7 @@ func SetMarketplaceRouter(router *gin.Engine) {
 			authed.GET("/buyer/trades", mpController.GetBuyerTrades)
 			authed.GET("/buyer/models", mpController.GetBuyerModelUsage)
 			authed.GET("/buyer/api-info", mpController.GetBuyerAPIInfo)
-			authed.POST("/buyer/api-token", mpController.CreateBuyerAPIToken)
+			authed.POST("/buyer/api-token", middleware.CriticalRateLimit(), mpController.CreateBuyerAPIToken)
 		}
 
 		// Admin routes (require admin role)

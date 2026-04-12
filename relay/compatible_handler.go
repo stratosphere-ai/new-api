@@ -433,7 +433,9 @@ func postConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, usage 
 	}
 
 	// Record marketplace trade if this is a marketplace channel
-	mpSettlement.RecordTrade(relayInfo.ChannelId, relayInfo.UserId, modelName, promptTokens, completionTokens, int64(quota))
+	if err := mpSettlement.RecordTrade(relayInfo.ChannelId, relayInfo.UserId, modelName, promptTokens, completionTokens, int64(quota)); err != nil {
+		logger.LogError(ctx, fmt.Sprintf("marketplace trade recording failed: %v", err))
+	}
 
 	logModel := modelName
 	if strings.HasPrefix(logModel, "gpt-4-gizmo") {
