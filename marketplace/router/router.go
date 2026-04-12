@@ -35,5 +35,17 @@ func SetMarketplaceRouter(router *gin.Engine) {
 			authed.GET("/buyer/api-info", mpController.GetBuyerAPIInfo)
 			authed.POST("/buyer/api-token", mpController.CreateBuyerAPIToken)
 		}
+
+		// Admin routes (require admin role)
+		admin := mp.Group("/admin")
+		admin.Use(middleware.AdminAuth())
+		{
+			admin.GET("/sellers", mpController.AdminGetSellers)
+			admin.GET("/withdrawals", mpController.AdminGetWithdrawals)
+			admin.POST("/withdrawals/:id/approve", mpController.AdminApproveWithdrawal)
+			admin.POST("/withdrawals/:id/paid", mpController.AdminMarkWithdrawalPaid)
+			admin.POST("/withdrawals/:id/reject", mpController.AdminRejectWithdrawal)
+			admin.POST("/settlement/trigger", mpController.AdminTriggerSettlement)
+		}
 	}
 }

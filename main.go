@@ -17,6 +17,7 @@ import (
 	"github.com/QuantumNous/new-api/i18n"
 	"github.com/QuantumNous/new-api/logger"
 	mpModel "github.com/QuantumNous/new-api/marketplace/model"
+	mpService "github.com/QuantumNous/new-api/marketplace/service"
 	"github.com/QuantumNous/new-api/middleware"
 	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/oauth"
@@ -69,6 +70,7 @@ func main() {
 	if err := mpModel.MigrateMarketplaceTables(); err != nil {
 		common.FatalLog("failed to migrate marketplace tables: " + err.Error())
 	}
+	mpService.StartMonthlySettlementCron()
 
 	if common.RedisEnabled {
 		// for compatibility with old versions
