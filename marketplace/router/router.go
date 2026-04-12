@@ -21,6 +21,8 @@ func SetMarketplaceRouter(router *gin.Engine) {
 			// Seller routes
 			authed.POST("/seller/register", mpController.RegisterSeller)
 			authed.GET("/seller/dashboard", mpController.GetSellerDashboard)
+			authed.GET("/seller/withdrawals", mpController.GetSellerWithdrawals)
+			authed.GET("/seller/trades", mpController.GetSellerTrades)
 
 			// Listing management
 			authed.POST("/listings", mpController.CreateListing)

@@ -39,6 +39,14 @@ func GetTradesBySellerId(sellerId int, startTime, endTime time.Time) ([]*Trade, 
 	return trades, err
 }
 
+// GetSellerRecentTrades returns the most recent trades for a seller
+func GetSellerRecentTrades(sellerId int, limit int) ([]*Trade, error) {
+	var trades []*Trade
+	err := mainModel.DB.Where("seller_id = ?", sellerId).
+		Order("created_at desc").Limit(limit).Find(&trades).Error
+	return trades, err
+}
+
 func GetTradesByBuyerUserId(buyerUserId int, limit int, offset int) ([]*Trade, error) {
 	var trades []*Trade
 	err := mainModel.DB.Where("buyer_user_id = ?", buyerUserId).
