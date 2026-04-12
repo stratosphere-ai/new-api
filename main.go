@@ -16,6 +16,7 @@ import (
 	"github.com/QuantumNous/new-api/controller"
 	"github.com/QuantumNous/new-api/i18n"
 	"github.com/QuantumNous/new-api/logger"
+	mpModel "github.com/QuantumNous/new-api/marketplace/model"
 	"github.com/QuantumNous/new-api/middleware"
 	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/oauth"
@@ -62,6 +63,12 @@ func main() {
 			common.FatalLog("failed to close database: " + err.Error())
 		}
 	}()
+
+	// Initialize marketplace
+	common.InitMarketplaceEncryption()
+	if err := mpModel.MigrateMarketplaceTables(); err != nil {
+		common.FatalLog("failed to migrate marketplace tables: " + err.Error())
+	}
 
 	if common.RedisEnabled {
 		// for compatibility with old versions

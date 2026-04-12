@@ -360,6 +360,10 @@ func SetupContextForSelectedChannel(c *gin.Context, channel *model.Channel, mode
 	if newAPIError != nil {
 		return newAPIError
 	}
+	// Decrypt marketplace-encrypted keys
+	if decrypted, err := common.DecryptAPIKey(key); err == nil {
+		key = decrypted
+	}
 	if channel.ChannelInfo.IsMultiKey {
 		common.SetContextKey(c, constant.ContextKeyChannelIsMultiKey, true)
 		common.SetContextKey(c, constant.ContextKeyChannelMultiKeyIndex, index)

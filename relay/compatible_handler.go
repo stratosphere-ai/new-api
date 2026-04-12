@@ -12,6 +12,7 @@ import (
 	"github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/dto"
 	"github.com/QuantumNous/new-api/logger"
+	mpSettlement "github.com/QuantumNous/new-api/marketplace/service"
 	"github.com/QuantumNous/new-api/model"
 	relaycommon "github.com/QuantumNous/new-api/relay/common"
 	relayconstant "github.com/QuantumNous/new-api/relay/constant"
@@ -430,6 +431,9 @@ func postConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, usage 
 	if err := service.SettleBilling(ctx, relayInfo, quota); err != nil {
 		logger.LogError(ctx, "error settling billing: "+err.Error())
 	}
+
+	// Record marketplace trade if this is a marketplace channel
+	mpSettlement.RecordTrade(relayInfo.ChannelId, relayInfo.UserId, modelName, promptTokens, completionTokens, int64(quota))
 
 	logModel := modelName
 	if strings.HasPrefix(logModel, "gpt-4-gizmo") {
