@@ -70,6 +70,7 @@ func main() {
 	if err := mpModel.MigrateMarketplaceTables(); err != nil {
 		common.FatalLog("failed to migrate marketplace tables: " + err.Error())
 	}
+	mpService.EnsureMarketplaceGroup()
 	mpService.StartMonthlySettlementCron()
 
 	if common.RedisEnabled {
