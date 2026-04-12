@@ -27,6 +27,13 @@ func SetMarketplaceRouter(router *gin.Engine) {
 			authed.POST("/listings/:id/pause", mpController.PauseListing)
 			authed.POST("/listings/:id/resume", mpController.ResumeListing)
 			authed.DELETE("/listings/:id", mpController.DeleteListing)
+
+			// Buyer routes
+			authed.GET("/buyer/stats", mpController.GetBuyerStats)
+			authed.GET("/buyer/trades", mpController.GetBuyerTrades)
+			authed.GET("/buyer/models", mpController.GetBuyerModelUsage)
+			authed.GET("/buyer/api-info", mpController.GetBuyerAPIInfo)
+			authed.POST("/buyer/api-token", mpController.CreateBuyerAPIToken)
 		}
 	}
 }

@@ -56,8 +56,46 @@ export interface CreateListingRequest {
   label: string;
 }
 
+export interface BuyerStats {
+  total_trades: number;
+  total_tokens: number;
+  total_spent: number;
+  total_saved: number;
+}
+
+export interface Trade {
+  id: number;
+  listing_id: number;
+  model_name: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  discount: number;
+  retail_amount: number;
+  buyer_amount: number;
+  created_at: string;
+}
+
+export interface ModelUsage {
+  model_name: string;
+  trade_count: number;
+  total_tokens: number;
+  total_spent: number;
+  avg_discount: number;
+}
+
+export interface APIToken {
+  id: number;
+  name: string;
+  key: string;
+  status?: number;
+}
+
 export const api = {
+  // Public
   getMarketInfo: () => request<MarketInfo>('/info'),
+
+  // Seller
   registerSeller: () => request<Seller>('/seller/register', { method: 'POST' }),
   getDashboard: () => request<SellerDashboard>('/seller/dashboard'),
   createListing: (data: CreateListingRequest) =>
@@ -68,4 +106,12 @@ export const api = {
     request<null>(`/listings/${id}/resume`, { method: 'POST' }),
   deleteListing: (id: number) =>
     request<null>(`/listings/${id}`, { method: 'DELETE' }),
+
+  // Buyer
+  getBuyerStats: () => request<{ stats: BuyerStats; balance: number }>('/buyer/stats'),
+  getBuyerTrades: (limit = 50, offset = 0) =>
+    request<Trade[]>(`/buyer/trades?limit=${limit}&offset=${offset}`),
+  getBuyerModelUsage: () => request<ModelUsage[]>('/buyer/models'),
+  getBuyerAPIInfo: () => request<{ tokens: APIToken[]; base_url: string; group: string }>('/buyer/api-info'),
+  createBuyerAPIToken: () => request<APIToken>('/buyer/api-token', { method: 'POST' }),
 };

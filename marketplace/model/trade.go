@@ -54,3 +54,45 @@ func GetSellerEarningsForPeriod(sellerId int, startTime, endTime time.Time) (int
 		Select("COALESCE(SUM(seller_amount), 0)").Scan(&total).Error
 	return total, err
 }
+
+// BuyerStats holds aggregated usage statistics for a buyer
+type BuyerStats struct {
+	TotalTrades  int64 `json:"total_trades"`
+	TotalTokens  int64 `json:"total_tokens"`
+	TotalSpent   int64 `json:"total_spent"`   // buyer_amount sum
+	TotalSaved   int64 `json:"total_saved"`   // retail_amount - buyer_amount
+}
+
+// GetBuyerStats returns aggregated statistics for a buyer
+func GetBuyerStats(buyerUserId int) (*BuyerStats, error) {
+	var stats BuyerStats
+	err := mainModel.DB.Model(&Trade{}).
+		Where("buyer_user_id = ?", buyerUserId).
+		Select("COUNT(*) as total_trades, COALESCE(SUM(total_tokens), 0) as total_tokens, COALESCE(SUM(buyer_amount), 0) as total_spent, COALESCE(SUM(retail_amount - buyer_amount), 0) as total_saved").
+		Scan(&stats).Error
+	if err != nil {
+		return nil, err
+	}
+	return &stats, nil
+}
+
+// BuyerModelUsage holds per-model usage for a buyer
+type BuyerModelUsage struct {
+	ModelName   string `json:"model_name"`
+	TradeCount  int64  `json:"trade_count"`
+	TotalTokens int64  `json:"total_tokens"`
+	TotalSpent  int64  `json:"total_spent"`
+	AvgDiscount int    `json:"avg_discount"`
+}
+
+// GetBuyerModelUsage returns per-model usage breakdown
+func GetBuyerModelUsage(buyerUserId int) ([]*BuyerModelUsage, error) {
+	var usage []*BuyerModelUsage
+	err := mainModel.DB.Model(&Trade{}).
+		Where("buyer_user_id = ?", buyerUserId).
+		Select("model_name, COUNT(*) as trade_count, SUM(total_tokens) as total_tokens, SUM(buyer_amount) as total_spent, AVG(discount) as avg_discount").
+		Group("model_name").
+		Order("total_spent desc").
+		Scan(&usage).Error
+	return usage, err
+}

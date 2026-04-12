@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import StartSelling from './pages/StartSelling';
 import Dashboard from './pages/Dashboard';
+import BuyerUsage from './pages/BuyerUsage';
+import APIAccess from './pages/APIAccess';
 import './index.css';
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
         <Route path="/" element={<StartSelling />} />
         <Route path="/sell" element={<StartSelling />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/usage" element={<BuyerUsage />} />
+        <Route path="/api" element={<APIAccess />} />
       </Routes>
     </BrowserRouter>
   );

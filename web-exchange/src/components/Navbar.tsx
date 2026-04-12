@@ -10,6 +10,8 @@ export default function Navbar() {
       <div className="nav-links">
         <Link to="/sell" className={isActive('/sell')}>Sell</Link>
         <Link to="/dashboard" className={isActive('/dashboard')}>Dashboard</Link>
+        <Link to="/usage" className={isActive('/usage')}>Usage</Link>
+        <Link to="/api" className={isActive('/api')}>API</Link>
       </div>
     </nav>
   );
