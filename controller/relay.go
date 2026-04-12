@@ -185,6 +185,9 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 	}
 
 	for ; retryParam.GetRetry() <= common.RetryTimes; retryParam.IncreaseRetry() {
+		if retryParam.GetRetry() > 0 {
+			service.RecordRetry(c.GetInt("channel_id"))
+		}
 		channel, channelErr := getChannel(c, relayInfo, retryParam)
 		if channelErr != nil {
 			logger.LogError(c, channelErr.Error())
@@ -217,6 +220,7 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 
 		if newAPIError == nil {
+			service.RecordCircuitBreakerSuccess(c.GetInt("channel_id"))
 			return
 		}
 
@@ -341,11 +345,16 @@ func processChannelError(c *gin.Context, channelError types.ChannelError, err *t
 	logger.LogError(c, fmt.Sprintf("channel error (channel #%d, status code: %d): %s", channelError.ChannelId, err.StatusCode, err.Error()))
 	// 不要使用context获取渠道信息，异步处理时可能会出现渠道信息不一致的情况
 	// do not use context to get channel info, there may be inconsistent channel info when processing asynchronously
-	if service.ShouldDisableChannel(channelError.ChannelType, err) && channelError.AutoBan {
+	shouldDisable := service.ShouldDisableChannel(channelError.ChannelType, err) && channelError.AutoBan
+	if shouldDisable {
 		gopool.Go(func() {
 			service.DisableChannel(channelError, err.ErrorWithStatusCode())
 		})
+	} else {
+		// Transient error — record for circuit breaker (auto-disable handles permanent failures)
+		service.RecordCircuitBreakerFailure(channelError.ChannelId)
 	}
+	service.RecordRequestError(channelError.ChannelId, string(err.GetErrorType()))
 
 	if constant.ErrorLogEnabled && types.IsRecordErrorLog(err) {
 		// 保存错误日志到mysql中

@@ -18,6 +18,16 @@ var group2model2channels map[string]map[string][]int // enabled channel
 var channelsIDM map[int]*Channel                     // all channels include disabled
 var channelSyncLock sync.RWMutex
 
+// ChannelShouldSkip is set by the service layer to filter out channels
+// that should be skipped during selection (e.g. circuit breaker tripped, rate limited).
+// Parameters: channelId, rpmLimit, tpmLimit from channel settings.
+// Returns true if the channel should be skipped.
+var ChannelShouldSkip func(channelId int, rpmLimit int, tpmLimit int) bool
+
+// ChannelCacheSyncCallback is called after channel cache sync completes,
+// allowing the service layer to prune stale state (e.g. circuit breakers).
+var ChannelCacheSyncCallback func(activeChannelIds map[int]bool)
+
 func InitChannelCache() {
 	if !common.MemoryCacheEnabled {
 		return
@@ -83,6 +93,15 @@ func InitChannelCache() {
 	channelsIDM = newChannelId2channel
 	channelSyncLock.Unlock()
 	common.SysLog("channels synced from database")
+
+	// Notify service layer to prune stale state (e.g. circuit breakers for deleted channels)
+	if ChannelCacheSyncCallback != nil {
+		activeIds := make(map[int]bool, len(newChannelId2channel))
+		for id := range newChannelId2channel {
+			activeIds[id] = true
+		}
+		ChannelCacheSyncCallback(activeIds)
+	}
 }
 
 func SyncChannelCache(frequency int) {
@@ -179,10 +198,17 @@ func GetRandomSatisfiedChannel(group string, model string, retry int) (*Channel,
 	// Generate a random value in the range [0, totalWeight)
 	randomWeight := rand.Intn(totalWeight)
 
-	// Find a channel based on its weight
+	// Find a channel based on its weight, skipping channels filtered by ChannelShouldSkip
+	skipFilter := ChannelShouldSkip
 	for _, channel := range targetChannels {
 		randomWeight -= channel.GetWeight()*smoothingFactor + smoothingAdjustment
 		if randomWeight < 0 {
+			if skipFilter != nil {
+				setting := channel.GetSetting()
+				if skipFilter(channel.Id, setting.RPMLimit, setting.TPMLimit) {
+					continue // skip this channel (circuit breaker tripped or rate limited)
+				}
+			}
 			return channel, nil
 		}
 	}

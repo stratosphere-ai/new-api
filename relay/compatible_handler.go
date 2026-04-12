@@ -245,6 +245,10 @@ func postConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, usage 
 
 	modelName := relayInfo.OriginModelName
 
+	// Record Prometheus metrics
+	service.ObserveRequestDuration(relayInfo.ChannelId, modelName, 200, time.Since(relayInfo.StartTime).Seconds())
+	service.RecordTokenUsage(relayInfo.ChannelId, modelName, promptTokens, completionTokens)
+
 	tokenName := ctx.GetString("token_name")
 	completionRatio := relayInfo.PriceData.CompletionRatio
 	cacheRatio := relayInfo.PriceData.CacheRatio

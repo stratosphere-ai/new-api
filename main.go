@@ -71,6 +71,9 @@ func main() {
 		common.SysLog("memory cache enabled")
 		common.SysLog(fmt.Sprintf("sync frequency: %d seconds", common.SyncFrequency))
 
+		// Register circuit breaker hooks for channel selection filtering
+		service.RegisterChannelCacheHooks()
+
 		// Add panic recovery and retry for InitChannelCache
 		func() {
 			defer func() {
@@ -123,6 +126,11 @@ func main() {
 		common.BatchUpdateEnabled = true
 		common.SysLog("batch update enabled with interval " + strconv.Itoa(common.BatchUpdateInterval) + "s")
 		model.InitBatchUpdater()
+	}
+
+	if os.Getenv("ENABLE_PROMETHEUS") == "true" {
+		service.MetricsEnabled = true
+		common.SysLog("Prometheus metrics enabled at /metrics")
 	}
 
 	if os.Getenv("ENABLE_PPROF") == "true" {

@@ -1,0 +1,94 @@
+{
+  "dashboard": {
+    "title": "New API Gateway",
+    "uid": "newapi-gateway",
+    "timezone": "browser",
+    "refresh": "10s",
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus"
+        }
+      ]
+    },
+    "panels": [
+      {
+        "title": "Active Requests",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+        "targets": [
+          { "expr": "newapi_active_requests", "legendFormat": "active" }
+        ]
+      },
+      {
+        "title": "Request Rate (5m)",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+        "targets": [
+          { "expr": "sum(rate(newapi_request_duration_seconds_count[5m]))", "legendFormat": "req/s" }
+        ]
+      },
+      {
+        "title": "Error Rate (5m)",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+        "targets": [
+          { "expr": "sum(rate(newapi_request_errors_total[5m]))", "legendFormat": "err/s" }
+        ],
+        "fieldConfig": { "defaults": { "thresholds": { "steps": [
+          { "color": "green", "value": null },
+          { "color": "yellow", "value": 0.1 },
+          { "color": "red", "value": 1 }
+        ]}}}
+      },
+      {
+        "title": "Retry Rate (5m)",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+        "targets": [
+          { "expr": "sum(rate(newapi_retry_total[5m]))", "legendFormat": "retry/s" }
+        ]
+      },
+      {
+        "title": "Per-Channel Error Rate",
+        "type": "table",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+        "targets": [
+          {
+            "expr": "rate(newapi_request_errors_total[5m]) / on(channel_id) rate(newapi_request_duration_seconds_count[5m]) > 0.05",
+            "legendFormat": "{{channel_id}}",
+            "format": "table",
+            "instant": true
+          }
+        ]
+      },
+      {
+        "title": "Request Latency (p50/p95/p99)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+        "targets": [
+          { "expr": "histogram_quantile(0.50, sum(rate(newapi_request_duration_seconds_bucket[5m])) by (le, model))", "legendFormat": "p50 {{model}}" },
+          { "expr": "histogram_quantile(0.95, sum(rate(newapi_request_duration_seconds_bucket[5m])) by (le, model))", "legendFormat": "p95 {{model}}" },
+          { "expr": "histogram_quantile(0.99, sum(rate(newapi_request_duration_seconds_bucket[5m])) by (le, model))", "legendFormat": "p99 {{model}}" }
+        ],
+        "fieldConfig": { "defaults": { "unit": "s" } }
+      },
+      {
+        "title": "Circuit Breaker Status",
+        "type": "state-timeline",
+        "gridPos": { "h": 6, "w": 24, "x": 0, "y": 12 },
+        "targets": [
+          { "expr": "newapi_circuit_breaker_state", "legendFormat": "channel {{channel_id}}" }
+        ],
+        "fieldConfig": { "defaults": { "mappings": [
+          { "type": "value", "options": { "0": { "text": "CLOSED", "color": "green" }}},
+          { "type": "value", "options": { "1": { "text": "OPEN", "color": "red" }}},
+          { "type": "value", "options": { "2": { "text": "HALF_OPEN", "color": "yellow" }}}
+        ]}}
+      }
+    ],
+    "schemaVersion": 39
+  }
+}

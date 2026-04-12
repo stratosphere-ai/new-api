@@ -7,6 +7,8 @@ type ChannelSettings struct {
 	PassThroughBodyEnabled bool   `json:"pass_through_body_enabled,omitempty"`
 	SystemPrompt           string `json:"system_prompt,omitempty"`
 	SystemPromptOverride   bool   `json:"system_prompt_override,omitempty"`
+	RPMLimit               int    `json:"rpm_limit,omitempty"` // Requests per minute limit (0 = unlimited)
+	TPMLimit               int    `json:"tpm_limit,omitempty"` // Tokens per minute limit (0 = unlimited)
 }
 
 type VertexKeyType string
