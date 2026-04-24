@@ -133,9 +133,10 @@
 | **N3** | **Token 级可观测仪表盘**（QPS / 延迟 / 成本 / 错误率 / token 消耗分布 + 请求详情懒加载） | 新 `controller/observability.go` + 新 `web/src/pages/Observability/` | P0 |
 | **N4** | **EVM 钱包登录**（Metamask / WalletConnect / Coinbase Wallet / Rabby 等所有 EVM 钱包；SIWE EIP-4361） | 新 `controller/wallet_auth.go` + 新 `model/wallet_credential.go` + 新 `web/src/pages/Login/WalletConnect.tsx` | P0 |
 | **N5** | **稳定币充值**（USDT / USDC / JPYP 预充值，多链） | 新 `service/stablecoin/` + 新 `controller/stablecoin.go` + 新 `model/stablecoin_payment.go` | P0 |
-| **N6** | **平台自营 Key 池 UI**（Channel 页区分 BYO vs Platform，Token 页允许用户勾选"允许走平台 key"） | 扩展 `model/channel.go`、`model/token.go` + 前端 Channel/Token 页改造 | P1 |
+| **N6** | **API 渠道池 / Model Market**（后端 `Channel` 打 BYO / Platform 标签 + Token 页加"允许走平台 key"开关；用户端新增 **模型市场页**：列出所有可用模型，每个模型标出价格 / 提供方 / 可用 channel，支持加入收藏 + 设置 per-token 偏好 channel） | 扩展 `model/channel.go`、`model/token.go` + 新 `controller/model_market.go` + 新 `web/src/pages/ModelMarket/` | **P0** |
 | **N7** | **`OrgID` 字段预留**（`users / tokens / channels / logs` 四张表新增可空 `org_id`） | `model/*.go` + `AutoMigrate` | P1（B 端铺垫，不暴露 UI） |
 | **N8** | **官网 Landing + 部署文档 + OSS 发布流程** | 新 `web/src/pages/Landing/` + `docs/deployment/` + `README.md` 更新 + GitHub Release CI | P0 |
+| **N9** | **API Debugger**（原 Playground **重定位**：保留 chat 调试能力 + prompt 导入/导出，新增"Replay from Log"/"Export as curl"/"并排对比两个 channel"，与 N3 观测仪表盘深度联动 —— 点一条 log 可一键重放） | 保留 `router/relay-router.go:59-65` 的 `/pg/*` 后端路由 + `controller/playground.go` + `web/src/pages/Playground/` **重命名为 `Debugger/`**，前端 UI 文案由"聊天"改为"请求调试" | P0 |
 
 **优先级定义**：
 - **P0** = v0.2 GA 必须；不完成则推迟发布。
@@ -145,13 +146,13 @@
 
 | # | 功能 | 移除方式 |
 |---|---|---|
-| **D1** | `/pg/*` 后台 Playground 对话路由 | 删除 `router/relay-router.go:59-65` + `controller/playground.go` |
-| **D2** | `web/src/pages/Playground/*` 前端页面 | 删除目录 + `App.jsx` 路由 + 菜单项 |
-| **D3** | `web/src/pages/Chat/*` 前端页面 | 删除目录 + 路由 + 菜单项 |
-| **D4** | `web/src/pages/Chat2Link/*` 前端页面 | 删除目录 + 路由 |
-| **D5** | 侧边栏"聊天"菜单项 | `web/src/components/layout/SiderBar.jsx` 清理 |
+| **D1** | `web/src/pages/Chat/*` 前端页面 | 删除目录 + `App.jsx` 路由 + 菜单项 |
+| **D2** | `web/src/pages/Chat2Link/*` 前端页面 | 删除目录 + 路由 |
+| **D3** | 侧边栏"聊天"菜单项替换为"调试 / Debugger" | `web/src/components/layout/SiderBar.jsx` 改 label + 指向 `Debugger/` |
 
-> **注意**：只删前端对话页 + `/pg` 后端路由。**不动** Midjourney / Suno（它们是"异步任务"类，不是"聊天对话"类）。
+> **注意**：
+> - `/pg/*` 后端路由 + `controller/playground.go` + `web/src/pages/Playground/` **保留**，作为 N9 API Debugger 的实现底座（见 §2.2 N9）。
+> - 只删纯"聊天 UI"类前端页（Chat / Chat2Link）。**不动** Midjourney / Suno（它们是"异步任务"类，不是"聊天对话"类）。
 
 ### 2.4 冻结 / 延后（Parked — v0.2 **不投产**，但保留代码占位）
 
